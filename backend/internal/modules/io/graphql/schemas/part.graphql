@@ -1,0 +1,59 @@
+extend type Query {
+    "Получить часть по идентификатору"
+    PartGet(id: ID!): Part! @permission(permission: parts_read)
+    "Получить все части"
+    PartList(sortOrder: SortOrder): [Part!]! @permission(permission: parts_read)
+}
+
+extend type Mutation {
+    "Создать часть"
+    PartCreate(part: PartCreate!): Part! @permission(permission: parts_create)
+    "Обновить часть"
+    PartUpdate(id: ID!, part: PartUpdate!): Part! @permission(permission: parts_update)
+    "Удалить часть"
+    PartDelete(id: ID!): String! @permission(permission: parts_delete)
+}
+
+"Часть книги"
+type Part implements Releasable @goModel(model: "waterfall-backend/internal/modules/domain/part/dto.Part")
+@ignoreReleaseDate(availableFields: ["ID", "Number", "Title", "AvailableAt"]) {
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "Номер"
+    Number: Int!
+    "Название"
+    Title: String!
+    "Аннотация"
+    Annotation: String
+    "Главы"
+    Chapters(sortOrder: SortOrder): [Chapter!]!
+
+    "Ссылка на этот объект"
+    Ref: ObjectRef!
+    "Текстовое представление объекта"
+    String: String!
+    "Информация о релизе (без указания выпускаемых объектов)"
+    ReleaseInfo: ReleaseInfo
+    "Дата, когда часть станет доступна"
+    AvailableAt: DateTime
+}
+
+"Модель создания части"
+input PartCreate @goModel(model: "waterfall-backend/internal/modules/domain/part/dto.PartCreate") {
+    "Номер"
+    Number: Int!
+    "Название"
+    Title: String!
+    "Аннотация"
+    Annotation: String
+}
+
+"Модель обновления части"
+input PartUpdate @goModel(model: "waterfall-backend/internal/modules/domain/part/dto.PartUpdate") {
+    "Номер"
+    Number: Int!
+    "Название"
+    Title: String!
+    "Аннотация"
+    Annotation: String
+}

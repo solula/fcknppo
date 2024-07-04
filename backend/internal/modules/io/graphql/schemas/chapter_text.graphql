@@ -1,0 +1,37 @@
+extend type Query {
+    "Получить текст главы по идентификатору"
+    ChapterTextGet(id: ID!): ChapterText! @permission(permission: chapters_read)
+}
+
+extend type Mutation {
+    "Создать текст главы"
+    ChapterTextCreate(chapterText: ChapterTextCreate!): ChapterText! @permission(permission: chapters_update)
+    "Обновить текст главы"
+    ChapterTextUpdate(id: ID!, chapterText: ChapterTextUpdate!): ChapterText! @permission(permission: chapters_update)
+    "Удалить текст главы"
+    ChapterTextDelete(id: ID!): String! @permission(permission: chapters_update)
+}
+
+"Текст главы"
+type ChapterText @goModel(model: "waterfall-backend/internal/modules/domain/chapter/dto.ChapterText") {
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "ID главы, к которой принадлежит текст"
+    ChapterID: ID! @goField(name: "ChapterUuid")
+    "Текст главы"
+    Text: String!
+}
+
+"Модель создания текста главы"
+input ChapterTextCreate @goModel(model: "waterfall-backend/internal/modules/domain/chapter/dto.ChapterTextCreate") {
+    "ID главы, к которой принадлежит текст"
+    ChapterID: ID! @goField(name: "ChapterUuid")
+    "Текст главы"
+    Text: String!
+}
+
+"Модель обновления текста главы"
+input ChapterTextUpdate @goModel(model: "waterfall-backend/internal/modules/domain/chapter/dto.ChapterTextUpdate") {
+    "Текст главы"
+    Text: String!
+}

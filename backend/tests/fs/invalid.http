@@ -1,0 +1,8 @@
+### Несуществующий роут
+GET http://{{server_host}}/api/invalid
+
+### Несуществующий файл
+GET http://{{server_host}}/api/files/00000000-a159-4e14-b7d8-73a57e5c5f93
+
+### Некорректный uuid
+GET http://{{server_host}}/api/files/8275c4ac-a159-4e14-b7d8-

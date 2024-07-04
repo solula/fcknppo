@@ -1,0 +1,38 @@
+extend type Mutation {
+    "Сделать несколько файлов не временными"
+    FilesMakeNotTemp(ids: [ID!]!): [ID!]!
+    "Удалить несколько файлов"
+    FilesDelete(ids: [ID!]!): [ID!]!
+    "Назначить файлам порядковые номера в соответствии с последовательностью ids"
+    FilesReorder(ids: [ID!]!): [ID!]!
+}
+
+"Файл"
+type File @goModel(model: "waterfall-backend/internal/modules/services/fs/dto.File") {
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "Имя файла"
+    Filename: String!
+    "MIME тип"
+    MIMEType: String!
+    "Описание"
+    Description: String!
+    "ID создателя файла"
+    CreatorID: ID @goField(name: "CreatorUuid")
+    "Ссылка на объект"
+    ObjectRef: ObjectRef!
+    "Тип файла"
+    Type: FileType!
+    "Признак временного файла"
+    Temp: Boolean!
+    "Порядковый номер файла среди всех файлов этого ObjectRef с таким типом"
+    SequenceNumber: Uint
+}
+
+"Тип файла"
+enum FileType @goModel(model: "waterfall-backend/internal/models/files.Type") {
+    "Аватарка пользователя"
+    avatar
+    "Изображение (например, к главе)"
+    image
+}

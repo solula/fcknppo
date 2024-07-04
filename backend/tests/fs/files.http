@@ -1,0 +1,107 @@
+### Получить файл
+GET http://{{server_host}}/api/files/5ecb89d2-5178-4703-9a63-f67c527877ef
+Authorization: Bearer {{access_token}}
+
+### Получить аватар по умолчанию
+GET http://{{server_host}}/api/files/ac7b0d99-752a-40ef-abc7-87e2f20090b7
+Authorization: Bearer {{access_token}}
+
+### Добавить картинку главы
+POST http://{{server_host}}/api/files
+Content-Type: multipart/form-data; boundary=AppBoundary
+Authorization: Bearer {{access_token}}
+
+--AppBoundary
+Content-Disposition: form-data; name="metadata";
+Content-Type: application/json
+
+{
+    "Description": "Тестовое фото",
+    "ObjectRef": {
+        "Type": "chapters",
+        "Ref": "05b59385-cb28-4993-a8b6-bc4331953bdc"
+    },
+    "Type": "image"
+}
+
+--AppBoundary
+Content-Disposition: form-data; name="content"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< ./files/2-2.jpg
+--AppBoundary--
+
+### Добавить аватар пользователю
+POST http://{{server_host}}/api/files
+Content-Type: multipart/form-data; boundary=AppBoundary
+Authorization: Bearer {{access_token}}
+
+--AppBoundary
+Content-Disposition: form-data; name="metadata";
+Content-Type: application/json
+
+{
+    "Description": "Тестовое фото",
+    "ObjectRef": {
+        "Type": "users",
+        "Ref": "c89ceb76-35b9-47c0-a687-4c89d72edb83"
+    },
+    "Type": "avatar"
+}
+
+--AppBoundary
+Content-Disposition: form-data; name="content"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< ./files/photo.jpg
+--AppBoundary--
+
+### Создать странный файл
+POST http://{{server_host}}/api/files
+Content-Type: multipart/form-data; boundary=AppBoundary
+Authorization: Bearer {{access_token}}
+
+--AppBoundary
+Content-Disposition: form-data; name="metadata";
+Content-Type: application/json
+
+{
+    "Description": "Странный файл",
+    "ObjectRef": {
+        "Type": "chapters",
+        "Ref": "8de95b5c-9560-4089-bb63-4b83859cbb6a"
+    },
+    "Type": "unknown"
+}
+
+--AppBoundary
+Content-Disposition: form-data; name="content"; filename="starnge.str"
+Content-Type: application/octet-stream
+
+2321324353455464564
+--AppBoundary--
+
+### Создать файл неизвестного типа
+POST http://{{server_host}}/api/files
+Content-Type: multipart/form-data; boundary=AppBoundary
+Authorization: Bearer {{access_token}}
+
+--AppBoundary
+Content-Disposition: form-data; name="metadata";
+Content-Type: application/json
+
+{
+    "Description": "Тестовое фото",
+    "ObjectRef": {
+        "Type": "chapters",
+        "Ref": "8de95b5c-9560-4089-bb63-4b83859cbb6a"
+    },
+    "Type": "unknown"
+}
+
+--AppBoundary
+Content-Disposition: form-data; name="content"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< ./files/photo.jpg
+--AppBoundary--

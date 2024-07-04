@@ -1,0 +1,59 @@
+extend type Query {
+    "Получить пользователя по идентификатору"
+    UserGet(id: ID!): User! @permission(permission: users_read)
+    "Получить своего пользователя"
+    UserGetSelf: User! @permission(permission: users_read_self)
+    "Получить список пользователей"
+    UserList: [User!]! @permission(permission: users_read)
+}
+
+extend type Mutation {
+    "Обновить собственный профиль"
+    UserUpdateSelf(updateUser: UserUpdate!): User! @permission(permission: users_update_self)
+    "Обновить пользователя"
+    UserUpdate(id: ID!, updateUser: UserUpdate!): User! @permission(permission: users_update)
+    "Удалить собственный профиль"
+    UserDeleteSelf: ID! @permission(permission: users_delete_self)
+    "Удалить пользователя"
+    UserDelete(id: ID!): ID! @permission(permission: users_delete)
+
+    "Добавить роль пользователю"
+    UserAddRole(id: ID!, role: RoleType!): [Role!]! @permission(permission: users_update)
+    "Забрать роль у пользователя"
+    UserRemoveRole(id: ID!, role: RoleType!): [Role!]! @permission(permission: users_update)
+}
+
+"Пользователь"
+type User @goModel(model: "waterfall-backend/internal/modules/domain/user/dto.User")
+@protect(protectedFields: ["Email", "Roles", "Permissions"]){
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "Дата создания"
+    CreatedAt: DateTime!
+    "Дата обновления"
+    UpdatedAt: DateTime!
+    "Дата удаления"
+    DeletedAt: DateTime
+    "Email"
+    Email: String
+    "Полное имя"
+    Fullname: String!
+    "Имя пользователя в системе"
+    Username: String!
+    "Количество баллов"
+    Score: Int!
+
+    "Роли"
+    Roles: [Role!]!
+
+    "Аттачменты (файлы) пользователя"
+    Attachments: [File!]!
+}
+
+"Модель обновления пользователя"
+input UserUpdate @goModel(model: "waterfall-backend/internal/modules/domain/user/dto.UserUpdate") {
+    "Полное имя"
+    Fullname: String!
+    "Имя пользователя в системе"
+    Username: String!
+}

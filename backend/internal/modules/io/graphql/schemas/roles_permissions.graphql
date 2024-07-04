@@ -1,0 +1,43 @@
+enum RoleType @goModel(model: "waterfall-backend/internal/models/roles.Type") {
+    admin
+    premium
+    free
+    guest
+}
+
+enum PermissionType @goModel(model: "waterfall-backend/internal/models/permissions.Type") {
+    files_read
+    files_create
+    releases_read
+    releases_create
+    releases_update
+    releases_delete
+    users_read
+    users_read_self
+    users_create
+    users_update
+    users_update_self
+    users_delete
+    users_delete_self
+    chapters_read
+    chapters_create
+    chapters_update
+    chapters_delete
+    parts_read
+    parts_create
+    parts_update
+    parts_delete
+    comments_read
+    comments_create
+    comments_update
+    comments_delete
+}
+
+type Role @goModel(model: "waterfall-backend/internal/modules/domain/user/dto.Role") {
+    "Идентификатор"
+    ID: RoleType! @goField(name: "Id")
+    "Описание роли"
+    Description: String!
+    "Задержка релиза для этой роли"
+    ReleaseDelay: String!
+}

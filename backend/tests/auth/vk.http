@@ -1,0 +1,13 @@
+### Получить токен доступа
+POST https://api.vk.com/method/auth.exchangeSilentAuthToken
+Content-Type: application/x-www-form-urlencoded
+
+v = 5.154 &
+token = 4gyrHK8wQTzP78YwzqZoeP6WV7TcfUYmNJBVldpPppdxRV8s4yZh_HuXX9DUPE1VcKO2CDzmX9lfn21DUaW2ZuYorBnqG0UuoZmFpBojUEcjKOm6wwGh4mLI8MWH2cAiA9DuX_-FPuxXSsTnvNoVN7F77uUiPrXNxuw5UO1ThaUd2J7156H1fcDGgMWmCWSNx1yKDd1ygUDZglsw0z-ISoH4UP8_m4L4QIkpRH5stG-hWOyuLX5OuvtJsVRxnC1iAvRWXctjcxluASFI6nbYTd2wXP0Llj-mdbke9nrcBWi-0C9P_WxNYAOI-JE65CZNxX2vUFrVSv8HtfXyuxcWgukYgfb1B4-l_MQZRuXMG-Td9FFdNfH4-2hvHi9e7bnS &
+access_token =  &
+uuid = pXSmsn63CvyzX5d0Sdw9Y
+
+
+// access_token = vk1.a.NDGGG9X1QNTMgPOjMm-KJmS8iRkFCiyoaHJc-MDOGomY8QNenxD4MJl-IBqLJw7OGTdy5Uc9cMp_h-uUd0kPAw4_BVCOBKrCzTTDuf7cDsXdQb257RVFGGZ8ZBffyaLoCBqV_d7X_8XqPlKKwAQT5ElY8PcYeAJDPYTjnoqsqTsLo4c_m3GmxzooUb3_ZIxvqwp9LgyGVRn7LG9cEW3I5g
+
+// https://oauth.vk.com/authorize?client_id=51788593&scope=4194304&redirect_uri=http://localhost/redirect/vk

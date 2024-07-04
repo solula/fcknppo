@@ -1,0 +1,45 @@
+{{/* gotype: entgo.io/ent/entc/gen.Graph */}}
+
+{{ define "set_if_present" }}
+
+    {{/* Add the base header for the generated file */}}
+    {{ $pkg := base $.Config.Package }}
+    {{ template "header" $ }}
+
+    {{ range $n := $.Nodes }}
+        {{ $updater := $n.UpdateName }}
+        {{ range $f := $n.MutableFields }}
+            {{ $set := print "Set" $f.StructField }}
+			{{ $varType := printf "optional.Variable[%s]" $f.Type.String }}
+            {{ if $f.Optional }}
+                {{ $clear := print "Clear" $f.StructField }}
+				func (u *{{ $updater }}One) SetOrClear{{ $f.StructField }}IfPresent(optionalVar {{ $varType }}) *{{ $updater }}One {
+					if !optionalVar.IsSet() {
+						return u
+					}
+
+					if optionalVar.Value() != nil {
+						u.{{ $set }}(*optionalVar.Value())
+					} else {
+						u.{{ $clear }}()
+					}
+
+					return u
+				}
+			{{ else }}
+				func (u *{{ $updater }}One) Set{{ $f.StructField }}IfPresent(optionalVar {{ $varType }}) *{{ $updater }}One {
+					if !optionalVar.IsSet() {
+						return u
+					}
+
+					if optionalVar.Value() != nil {
+						u.{{ $set }}(*optionalVar.Value())
+					}
+
+					return u
+				}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
+{{ end }}

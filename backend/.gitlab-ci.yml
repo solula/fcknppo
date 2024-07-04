@@ -1,0 +1,71 @@
+stages:
+  - build
+  - deploy
+
+publish:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - echo "Building and publishing to registry..."
+
+    # Заполняем авторизационные данные для доступа к Registry
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" | tee /kaniko/.docker/config.json
+    
+    - echo -e "Publish $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+    - /kaniko/executor --context $CI_PROJECT_DIR
+                       --dockerfile $CI_PROJECT_DIR/server.Dockerfile
+                       --destination $CI_REGISTRY_IMAGE/server:$CI_COMMIT_TAG
+                       --destination $CI_REGISTRY_IMAGE/server:latest
+
+    - echo -e "Publish $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+    - /kaniko/executor --context $CI_PROJECT_DIR
+                       --dockerfile $CI_PROJECT_DIR/worker.Dockerfile
+                       --destination $CI_REGISTRY_IMAGE/worker:$CI_COMMIT_TAG
+                       --destination $CI_REGISTRY_IMAGE/worker:latest
+
+    - echo "Publish complete."
+
+  only:
+    # Job только при публикации тегов
+    - tags
+
+deploy:      
+  stage: deploy
+  environment: production
+
+  before_script:
+    - echo "Preparing ssh agent..."
+
+    ## Install ssh-agent if not already installed, it is required by Docker.
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+
+    ## Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+
+    ## Give the right permissions, otherwise ssh-add will refuse to add files
+    ## Add the SSH key stored in SSH_PRIVATE_KEY file type CI/CD variable to the agent store
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+
+    ## Create the SSH directory and give it the right permissions
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+    - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - echo "Deploying $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG..."
+    
+    - ssh $SERVER_USER@$SERVER_IP "cd $WORKING_DIRECTORY && ./run.sh --ci-registry-user $CI_REGISTRY_USER --ci-registry-password $CI_REGISTRY_PASSWORD --ci-registry-image $CI_REGISTRY_IMAGE --ci-commit-tag $CI_COMMIT_TAG --docker-network $DOCKER_NETWORK"
+
+    - echo "Deployed successfully."
+
+  only:
+    # Job только при публикации тегов
+    - tags
+  needs:
+    - publish

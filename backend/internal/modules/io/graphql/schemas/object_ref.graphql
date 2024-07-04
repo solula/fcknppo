@@ -1,0 +1,16 @@
+enum ObjectType @goModel(model: "waterfall-backend/internal/models.ObjectType") {
+    files
+    parts
+    chapters
+    users
+}
+
+type ObjectRef @goModel(model: "waterfall-backend/internal/models.ObjectRef") {
+    Type: ObjectType!
+    Ref: String!
+}
+
+input ObjectRefInput @goModel(model: "waterfall-backend/internal/models.ObjectRef") {
+    Type: ObjectType!
+    Ref: String!
+}

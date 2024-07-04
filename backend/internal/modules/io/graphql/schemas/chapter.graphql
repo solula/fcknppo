@@ -1,0 +1,80 @@
+extend type Query {
+    "Получить главу по идентификатору"
+    ChapterGet(id: ID!): Chapter! @permission(permission: chapters_read)
+    "Получить все главы"
+    ChapterList: [Chapter!]! @permission(permission: chapters_read)
+    "Получить ID следующей главы"
+    ChapterNextID(id: ID!): ID @permission(permission: chapters_read)
+    "Получить ID предыдущей главы"
+    ChapterPrevID(id: ID!): ID @permission(permission: chapters_read)
+    "Получить ID первой главы"
+    ChapterFirstID: ID! @permission(permission: chapters_read)
+    "Получить ID последней доступной главы"
+    ChapterLastAvailableID: ID! @permission(permission: chapters_read)
+    "Получить дату доступности последней доступной главы"
+    ChapterLastAvailableAt: DateTime! @permission(permission: chapters_read)
+}
+
+extend type Mutation {
+    "Создать главу"
+    ChapterCreate(chapter: ChapterCreate!): Chapter! @permission(permission: chapters_create)
+    "Обновить главу"
+    ChapterUpdate(id: ID!, chapter: ChapterUpdate!): Chapter! @permission(permission: chapters_update)
+    "Удалить главу"
+    ChapterDelete(id: ID!): String! @permission(permission: chapters_delete)
+}
+
+"Глава"
+type Chapter implements Releasable @goModel(model: "waterfall-backend/internal/modules/domain/chapter/dto.Chapter")
+@ignoreReleaseDate(availableFields: ["ID", "Number", "Title", "AvailableAt"]) {
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "Номер"
+    Number: Int!
+    "Название"
+    Title: String!
+    "Часть, которой глава принадлежит"
+    Part: Part!
+
+    "Текст главы"
+    Text: ChapterText
+    "Аттачменты (файлы) главы"
+    Attachments: [File!]!
+    "Комментарии к главе"
+    Comments: [Comment!]! @permission(permission: comments_read)
+
+
+    "Получить ID следующей главы"
+    NextID: ID
+    "Получить ID предыдущей главы"
+    PrevID: ID
+
+    "Ссылка на этот объект"
+    Ref: ObjectRef!
+    "Текстовое представление объекта"
+    String: String!
+    "Информация о релизе (без указания выпускаемых объектов)"
+    ReleaseInfo: ReleaseInfo
+    "Дата, когда глава станет доступна"
+    AvailableAt: DateTime
+}
+
+"Модель создания главы"
+input ChapterCreate @goModel(model: "waterfall-backend/internal/modules/domain/chapter/dto.ChapterCreate") {
+    "Номер"
+    Number: Int!
+    "Название"
+    Title: String!
+    "ID части, которой глава принадлежит"
+    PartID: ID! @goField(name: "PartUuid")
+}
+
+"Модель обновления главы"
+input ChapterUpdate @goModel(model: "waterfall-backend/internal/modules/domain/chapter/dto.ChapterUpdate") {
+    "Номер"
+    Number: Int!
+    "Название"
+    Title: String!
+    "ID части, которой глава принадлежит"
+    PartID: ID! @goField(name: "PartUuid")
+}

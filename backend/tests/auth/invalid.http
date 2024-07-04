@@ -1,0 +1,26 @@
+### Попытка аутентификации по админом
+POST http://{{server_host}}/auth/login
+Content-Type: application/json
+
+{
+  "Email": "{{admin_email}}",
+  "Password": ""
+}
+
+### Несуществующий email
+POST http://{{server_host}}/auth/login
+Content-Type: application/json
+
+{
+  "Email": "invalid",
+  "Password": ""
+}
+
+### Неверный пароль
+POST http://{{server_host}}/auth/login
+Content-Type: application/json
+
+{
+  "Email": "{{free_email}}",
+  "Password": "invalid"
+}

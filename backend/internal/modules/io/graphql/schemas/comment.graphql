@@ -1,0 +1,49 @@
+extend type Query {
+    "Получить комментарий по идентификатору"
+    CommentGet(id: ID!): Comment! @permission(permission: comments_read)
+    "Получить все комментарии главы, отсортированные по дате создания"
+    CommentListByChapter(chapterID: ID!): [Comment!]! @permission(permission: comments_read)
+}
+
+extend type Mutation {
+    "Создать комментарий"
+    CommentCreate(chapter: CommentCreate!): Comment! @permission(permission: comments_create)
+    "Обновить комментарий"
+    CommentUpdate(id: ID!, chapter: CommentUpdate!): Comment! @permission(permission: comments_update)
+    "Удалить комментарий"
+    CommentDelete(id: ID!): String! @permission(permission: comments_delete)
+}
+
+"Комментарий"
+type Comment @goModel(model: "waterfall-backend/internal/modules/domain/comment/dto.Comment") {
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "Дата создания"
+    CreatedAt: DateTime!
+    "Дата обновления"
+    UpdatedAt: DateTime!
+    "Текст комментария"
+    Text: String!
+    "Автор"
+    Author: User!
+    "Родительский комментарий"
+    ParentID: ID @goField(name: "ParentUuid")
+    "Глава, которой этот комментарий принадлежит"
+    ChapterID: ID @goField(name: "ChapterUuid")
+}
+
+"Модель создания комментарий"
+input CommentCreate @goModel(model: "waterfall-backend/internal/modules/domain/comment/dto.CommentCreate") {
+    "Текст комментария"
+    Text: String!
+    "Родительский комментарий"
+    ParentID: ID @goField(name: "ParentUuid")
+    "Глава, которой этот комментарий принадлежит"
+    ChapterID: ID @goField(name: "ChapterUuid")
+}
+
+"Модель обновления комментарий"
+input CommentUpdate @goModel(model: "waterfall-backend/internal/modules/domain/comment/dto.CommentUpdate") {
+    "Текст комментария"
+    Text: String!
+}

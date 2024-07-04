@@ -1,0 +1,63 @@
+extend type Query {
+    "Получить релиз по идентификатору"
+    ReleaseGet(id: ID!): Release! @permission(permission: releases_read)
+    "Получить список релизов"
+    ReleaseList: [Release!]! @permission(permission: releases_read)
+}
+
+extend type Mutation {
+    "Создать релиз"
+    ReleaseCreate(release: ReleaseCreate!): ReleaseInfo! @permission(permission: releases_create)
+    "Обновить релиз"
+    ReleaseUpdate(id: ID!, release: ReleaseUpdate!): ReleaseInfo! @permission(permission: releases_update)
+    "Удалить релиз"
+    ReleaseDelete(id: ID!): String! @permission(permission: releases_delete)
+}
+
+interface Releasable @goModel(model: "waterfall-backend/internal/modules/domain/release/dto.Releasable") {
+    "Ссылка на объект"
+    Ref: ObjectRef!
+    "Текстовое представление объекта"
+    String: String!
+}
+
+"Релиз"
+type Release @goModel(model: "waterfall-backend/internal/modules/domain/release/dto.Release") {
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "Дата релиза"
+    ReleaseDate: DateTime!
+    "Описание"
+    Description: String!
+    "Список выпускаемых объектов"
+    Releasables: [Releasable!]!
+}
+
+"Информация о релизе (без указания выпускаемых объектов)"
+type ReleaseInfo @goModel(model: "waterfall-backend/internal/modules/domain/release/dto.Release") {
+    "Идентификатор"
+    ID: ID! @goField(name: "Uuid")
+    "Дата релиза"
+    ReleaseDate: DateTime!
+    "Описание"
+    Description: String!
+}
+
+
+"Новый релиз"
+input ReleaseCreate @goModel(model: "waterfall-backend/internal/modules/domain/release/dto.ReleaseCreate") {
+    "Дата релиза"
+    ReleaseDate: DateTime!
+    "Описание"
+    Description: String!
+    "Ссылки на выпускаемые объекты"
+    ObjectRefs: [ObjectRefInput!]!
+}
+
+"Модель обновления релиза"
+input ReleaseUpdate @goModel(model: "waterfall-backend/internal/modules/domain/release/dto.ReleaseUpdate") {
+    "Дата релиза"
+    ReleaseDate: DateTime!
+    "Описание"
+    Description: String!
+}

@@ -1,0 +1,641 @@
+{
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "title": "Сервис чтения книги",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:4000",
+    "paths": {
+        "/api/files": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Создать новый файл",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "файл",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.File"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/files/{uuid}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Получить файл по uuid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "uuid файла",
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Вход в систему",
+                "parameters": [
+                    {
+                        "description": "credentials",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserCredentials"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.JWT"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Обновление токена доступа",
+                "parameters": [
+                    {
+                        "description": "tokenPair",
+                        "name": "tokenPair",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.Tokens"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/signup/password": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Регистрация нового пользователя (с использованием пароля)",
+                "parameters": [
+                    {
+                        "description": "newUser",
+                        "name": "newUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserCredentials"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/graphql": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "GraphQL"
+                ],
+                "summary": "Запросы по спецификации GraphQL",
+                "parameters": [
+                    {
+                        "description": "тело запроса",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http_errors.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.File": {
+            "type": "object",
+            "properties": {
+                "Description": {
+                    "description": "Описание",
+                    "type": "string"
+                },
+                "Filename": {
+                    "description": "Имя файла",
+                    "type": "string"
+                },
+                "MIMEType": {
+                    "description": "MIME тип файла",
+                    "type": "string"
+                },
+                "ObjectRef": {
+                    "description": "Ссылка на сущность, которой файл принадлежит",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.ObjectRef"
+                        }
+                    ]
+                },
+                "ReleaseUuid": {
+                    "description": "Uuid релиза",
+                    "type": "string"
+                },
+                "Uuid": {
+                    "description": "Uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.JWT": {
+            "type": "object",
+            "properties": {
+                "AccessToken": {
+                    "description": "Токен доступа",
+                    "type": "string"
+                },
+                "RefreshToken": {
+                    "description": "Токен обновления токена доступа",
+                    "type": "string"
+                },
+                "Session": {
+                    "description": "Сессия пользователя",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/session.Session"
+                        }
+                    ]
+                }
+            }
+        },
+        "dto.Tokens": {
+            "type": "object",
+            "properties": {
+                "AccessToken": {
+                    "description": "Токен доступа",
+                    "type": "string"
+                },
+                "RefreshToken": {
+                    "description": "Токен обновления токена доступа",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.User": {
+            "type": "object",
+            "properties": {
+                "CreatedAt": {
+                    "description": "Дата создания",
+                    "type": "string"
+                },
+                "DeletedAt": {
+                    "description": "Дата удаления",
+                    "type": "string"
+                },
+                "Email": {
+                    "description": "Email",
+                    "type": "string"
+                },
+                "EmailVerified": {
+                    "description": "Признак подтверждения почты",
+                    "type": "boolean"
+                },
+                "Fullname": {
+                    "description": "Полное имя",
+                    "type": "string"
+                },
+                "Score": {
+                    "description": "Количество баллов",
+                    "type": "integer"
+                },
+                "UpdatedAt": {
+                    "description": "Дата обновления",
+                    "type": "string"
+                },
+                "Username": {
+                    "description": "Имя пользователя в системе",
+                    "type": "string"
+                },
+                "Uuid": {
+                    "description": "Uuid пользователя",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UserCredentials": {
+            "type": "object",
+            "properties": {
+                "Email": {
+                    "description": "Почта пользователя",
+                    "type": "string"
+                },
+                "Password": {
+                    "description": "Пароль",
+                    "type": "string"
+                }
+            }
+        },
+        "http_errors.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "Code": {
+                    "description": "Код ошибки (добавлено для возможности регулирование из кода)",
+                    "type": "integer"
+                },
+                "Details": {
+                    "description": "Сообщение техническое",
+                    "type": "string"
+                },
+                "Errors": {
+                    "description": "Набор ошибок если не одна",
+                    "type": "array",
+                    "items": {}
+                },
+                "Message": {
+                    "description": "Текстовое сообщение для вывода клиенту",
+                    "type": "string"
+                }
+            }
+        },
+        "models.ObjectRef": {
+            "type": "object",
+            "properties": {
+                "Ref": {
+                    "description": "Ссылка на сущность (идентификатор)",
+                    "type": "string"
+                },
+                "Type": {
+                    "description": "Тип (название) сущности",
+                    "type": "string"
+                }
+            }
+        },
+        "permissions.Type": {
+            "type": "string",
+            "enum": [
+                "files_read",
+                "files_create",
+                "chapters_read",
+                "chapters_create",
+                "chapters_update",
+                "chapters_delete",
+                "parts_read",
+                "parts_create",
+                "parts_update",
+                "parts_delete",
+                "users_read",
+                "users_create",
+                "users_update",
+                "users_update_self",
+                "users_delete",
+                "users_delete_self",
+                "releases_read",
+                "releases_create",
+                "releases_update",
+                "releases_delete"
+            ],
+            "x-enum-varnames": [
+                "FilesRead",
+                "FilesCreate",
+                "ChaptersRead",
+                "ChaptersCreate",
+                "ChaptersUpdate",
+                "ChaptersDelete",
+                "PartsRead",
+                "PartsCreate",
+                "PartsUpdate",
+                "PartsDelete",
+                "UsersRead",
+                "UsersCreate",
+                "UsersUpdate",
+                "UsersUpdateSelf",
+                "UsersDelete",
+                "UsersDeleteSelf",
+                "ReleasesRead",
+                "ReleasesCreate",
+                "ReleasesUpdate",
+                "ReleasesDelete"
+            ]
+        },
+        "roles.Type": {
+            "type": "string",
+            "enum": [
+                "admin",
+                "premium",
+                "free",
+                "guest"
+            ],
+            "x-enum-comments": {
+                "Admin": "Администратор",
+                "Free": "Бесплатный пользователь",
+                "Guest": "Гость (неавторизованный пользователь)",
+                "Premium": "Платный пользователь"
+            },
+            "x-enum-varnames": [
+                "Admin",
+                "Premium",
+                "Free",
+                "Guest"
+            ]
+        },
+        "session.Session": {
+            "type": "object",
+            "properties": {
+                "Email": {
+                    "description": "Почта пользователя",
+                    "type": "string"
+                },
+                "Permissions": {
+                    "description": "Список разрешений пользователя",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/permissions.Type"
+                    }
+                },
+                "ReleaseDelay": {
+                    "description": "Задержка доступности релизов",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/time.Duration"
+                        }
+                    ]
+                },
+                "Roles": {
+                    "description": "Список ролей пользователя",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/roles.Type"
+                    }
+                },
+                "SID": {
+                    "description": "Уникальный идентификатор сессии",
+                    "type": "string"
+                },
+                "UserUuid": {
+                    "description": "Uuid пользователя",
+                    "type": "string"
+                },
+                "Username": {
+                    "description": "Имя пользователя",
+                    "type": "string"
+                }
+            }
+        },
+        "time.Duration": {
+            "type": "integer",
+            "enum": [
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000
+            ],
+            "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour"
+            ]
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "tags": [
+        {
+            "description": "Роут GraphQL",
+            "name": "GraphQL"
+        },
+        {
+            "description": "Роуты аутентификации",
+            "name": "Auth"
+        },
+        {
+            "description": "Роуты файлов",
+            "name": "Files"
+        }
+    ]
+}

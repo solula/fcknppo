@@ -1,0 +1,47 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-waterfall-backend-dev
+    environment:
+      POSTGRES_PASSWORD: passw0rd
+      PG_PASSWORD: passw0rd
+      POSTGRES_DB: server_db
+    volumes:
+      - ./misc/postgres/docker:/docker-entrypoint-initdb.d/
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  s3:
+    image: bitnami/minio:2023.10.14
+    container_name: s3-waterfall-backend-dev
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - s3-data:/bitnami/minio/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  redis:
+    image: redis
+    container_name: redis-waterfall-backend-dev
+    ports:
+      - "6379:6379"
+
+  asynqmon:
+    image: hibiken/asynqmon
+    container_name: asynqmon-waterfall-backend-dev
+    environment:
+      - REDIS_ADDR=redis:6379
+    ports:
+      - "8888:8080"
+    depends_on:
+      - redis
+
+volumes:
+  s3-data:
+  postgres-data:

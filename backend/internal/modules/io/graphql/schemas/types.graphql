@@ -1,0 +1,36 @@
+type Query {
+   ping: String!
+}
+
+type Mutation {
+    ping: String!
+}
+
+scalar DateTime
+
+scalar Uint
+
+enum SortOrder {
+    ASC
+    DESC
+}
+
+"Если OptionalString не указан, то значение изменено не будет; если value не указано или равно null, то значение будет обнулено"
+input OptionalString @goModel(model: "waterfall-backend/internal/pkg/optional.StringVariable") {
+    value: String @goField(forceResolver: true)
+}
+
+"Если OptionalStringSlice не указан, то значение изменено не будет; если value не указано или равно null, то значение будет обнулено"
+input OptionalStringSlice @goModel(model: "waterfall-backend/internal/pkg/optional.StringSliceVariable") {
+    value: [String!] @goField(forceResolver: true)
+}
+
+"Если OptionalInt не указан, то значение изменено не будет; если value не указано или равно null, то значение будет обнулено"
+input OptionalInt @goModel(model: "waterfall-backend/internal/pkg/optional.IntVariable") {
+    value: Int @goField(forceResolver: true)
+}
+
+"Если OptionalID не указан, то значение изменено не будет; если value не указано или равно null, то значение будет обнулено"
+input OptionalID @goModel(model: "waterfall-backend/internal/pkg/optional.StringVariable") {
+    value: ID @goField(forceResolver: true)
+}

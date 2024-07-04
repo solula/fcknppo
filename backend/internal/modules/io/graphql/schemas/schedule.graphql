@@ -1,0 +1,4 @@
+extend type Mutation {
+    "Запланировать создание релиза"
+    ScheduleReleaseCreate(release: ReleaseCreate!, scheduleAt: DateTime!): String! @permission(permission: releases_create)
+}

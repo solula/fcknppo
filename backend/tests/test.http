@@ -1,0 +1,4 @@
+### Несуществующий роут
+GET http://{{server_host}}/api/test
+Accept: application/json
+
